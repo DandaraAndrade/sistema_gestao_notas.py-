@@ -1,0 +1,206 @@
+"""
+Aluno: Dandara Soares de Andrade 
+Data de desenvolvimento da aplicação: 24/06/2024
+
+Este código em Python implementa um sistema de gerenciamento de alunos com um menu interativo,
+permitindo adicionar, listar, remover e procurar alunos,
+além de calcular médias de notas e exibir um diário da turma. 
+Cada aluno é identificado por um RA (Registro Acadêmico)
+e possui um nome, uma nota B1 e uma nota B2.
+"""
+# Desenvolvimento de função para criar o menu principal interativo.
+# Vamos utilizar a ideia do laço de repetição while para desenvolver a interação com o usuário.
+def menu():
+    alunos = {}
+
+    while True:
+        print("\nMenu:")
+        print("1 - Adicionar aluno")
+        print("2 - Listar alunos")
+        print("3 - Remover aluno")
+        print("4 - Procurar aluno")
+        print("5 - Listar aprovados")
+        print("6 - Listar reprovados")
+        print("7 - Procurar pelo nome do aluno")
+        print("8 - Média da turma B1")
+        print("9 - Média da turma B2")
+        print("10 - Média da turma geral")
+        print("11 - Diário da turma")
+        print("0 - Sair")
+
+        opcao = input("Dígite a opção desejada: ")
+
+        if opcao == "1":
+            adicionar_aluno(alunos)
+        elif opcao == "2":
+            listar_alunos(alunos)
+        elif opcao == "3":
+            remover_aluno(alunos)
+        elif opcao == "4":
+            procurar_aluno(alunos)
+        elif opcao == "5":
+            listar_aprovados(alunos)
+        elif opcao == "6":
+            listar_reprovados(alunos)
+        elif opcao == "7":
+            procurar_pelo_nome(alunos)
+        elif opcao == "8":
+            media_turma_b1(alunos)
+        elif opcao == "9":
+            media_turma_b2(alunos)
+        elif opcao == "10":
+            media_turma_geral(alunos)
+        elif opcao == "11":
+            diario_turma(alunos)
+        elif opcao == "0":
+            print("Finalizando o sistema. Até logo!")
+            break
+        else:
+            print("Opção inválida! Escolha um opção válida e tente novamente.")
+            print("Caso o erro persista reporte á central.")
+
+# Uso de função def para adicionar alunos ao sistema, com o auxilio da estrutura while 
+# Que tem como objetivo evidenciar algum erro do usuário ao responder o questionario de registro
+# fornecendo a ele a escolha de responde-lo novamente até a responsta desejada para essa etapa.
+def adicionar_aluno(alunos):
+    ra = input("Digite o registro academico (RA) do aluno: ")
+    while len(ra) != 5 or not ra.isdigit() or ra in alunos:
+        if ra in alunos:
+            print("Registro academico já cadastrado! Por favor, insira um registro academico único e válido.")
+        else: 
+            print("Registro academico inválido! O RA deve possuir 5 caracteres numéricos")
+            print("O uso de letras ou caracteres especiais é proibido nessa etapa.")
+        ra = input("Digite um registro academico (RA) válido: ")
+
+    nome = input("Digite o nome do academico: ")
+    while len(nome) > 27:
+        print("Nome inválido! A resposta deve ter no máximo 27 caracteres.")
+        print("Se o nome ultrapassar a marca utilize abreviações ou simplificações.")
+        nome = input("Digite um nome válido: ")
+
+    nota_b1 = float(input("Digite a nota correspondente ao primeiro bimestre (0-10): "))
+    while nota_b1 < 0 or nota_b1 > 10:
+        print("Nota inválida! A nota de estar em números de 0 á 10.")
+        print("A utilização de letras para a representação numérica é inválida.")
+        nota_b1 = float(input("Digite a nota correspondente ao primeiro bimestre (0-10) em caracteres válidos: "))
+
+    nota_b2 = float(input("Digite a nota correspondente ao segundo bimestre (0-10): "))
+    while nota_b2 < 0 or nota_b2 > 10:
+        print("Nota inválida!  A nota de estar em números de 0 á 10.")
+        print("A utilização de letras para a representação numérica é inválida.")
+        nota_b2 = float(input("Digite a nota correspondente ao segundo bimestre (0-10) em caracteres válidos: "))
+
+ # Utilização de dicionário para organizar as informções dos alunos cadastrados.
+    alunos[ra] = {
+        'nome': nome,
+        'nota_b1': nota_b1,
+        'nota_b2': nota_b2
+    }
+    print("Aluno cadastrado com sucesso! Retorne ao menu.")
+
+# Função para listar os alunos cadastrados no sistema, fornecendo suas informações básicas solicitadas anteriormente.
+def listar_alunos(alunos):
+    lista = False
+    for ra, dados in alunos.items():
+        print(f"RA: {ra}, Nome: {dados['nome']}, Nota B1: {dados['nota_b1']}, Nota B2: {dados['nota_b2']}")
+        lista = True
+    if not lista:
+        print("Nenhum aluno cadastrado ainda! Por favor realize o cadastro dos alunos para prosseguir.")
+
+# Função para remover um aluno presente no sistema.
+def remover_aluno(alunos):
+    ra = input("Digite o registro academico (RA) do aluno que deseja remover do sistema: ")
+    if ra in alunos:
+        del alunos[ra]
+        print("Registro academico removido com sucesso!")
+    else:
+        print("Aluno não encontrado!")
+        print("Por favor insira um registro academico válido! Sem a utilização de letras, apenas números.")
+        print("Caso o erro persista consulte o cadastro do aluno no sistema.")
+
+# Função para buscar um aluno dentro do sistema.
+def procurar_aluno(alunos):
+    ra = input("Digite o registro academico do aluno que deseja encontrar: ")
+    if ra in alunos:
+        dados = alunos[ra]
+        print(f"RA: {ra}, Nome: {dados['nome']}, Nota B1: {dados['nota_b1']}, Nota B2: {dados['nota_b2']}")
+    else:
+        print("Aluno não encontrado! Por favor insira um registro academico válido ou cadastre-o no sistema.")
+
+# Função para listar os alunos aprovados e suas respectivas médias 
+def listar_aprovados(alunos):
+    for ra, dados in alunos.items():
+        media = (dados['nota_b1'] + dados['nota_b2']) / 2
+        if media >= 7:
+            print(f"RA: {ra}, Nome: {dados['nome']}, Média: {media}")
+
+# Função para listar os alunos reprovados e suas respectivas médias.
+def listar_reprovados(alunos):
+    reprovados = False
+    for ra, dados in alunos.items():
+        media = (dados['nota_b1'] + dados['nota_b2']) / 2
+        if media < 7:
+            print(f"RA: {ra}, Nome: {dados['nome']}, Média: {media:.2f}")
+            reprovados = True
+    if not reprovados:
+        print(f"Nenhum aluno reprovado constante no sistema.")
+
+# Funçao para procurar um aluno dentro dos sistema.
+def procurar_pelo_nome(alunos):
+    nome = input("Digite o nome do aluno que deseja encontrar: ")
+    encontrado = False
+    for ra, dados in alunos.items():
+        if nome.lower() in dados['nome'].lower():
+            print(f"RA: {ra}, Nome: {dados['nome']}, Nota B1: {dados['nota_b1']}, Nota B2: {dados['nota_b2']}")
+            encontrado = True
+    if not encontrado:
+        print("Aluno não encontrado! Revise as informações inseridas e tente novamente.")
+
+# Função para definir a média das turmas em b1.
+def media_turma_b1(alunos):
+    soma = sum(dados['nota_b1'] for dados in alunos.values())
+    media = soma / len(alunos) if alunos else 0
+    print(f"Média geral da turma em B1: {media}")
+
+# Função para definir a média das turmas em b2.
+def media_turma_b2(alunos):
+    soma = sum(dados['nota_b2'] for dados in alunos.values())
+    media = soma / len(alunos) if alunos else 0
+    print(f"Média geral da turma em B2: {media}")
+
+# Função para definir a média gereal em b1 e b2.
+def media_turma_geral(alunos):
+    soma = sum((dados['nota_b1'] + dados['nota_b2']) for dados in alunos.values())
+    media = soma / (2 * len(alunos)) if alunos else 0
+    print(f"Média geral da turma nós dois bimestres: {media}")
+
+# Função para definir o diário da turma seguindo de maneira aproximada ás formatações exigidas, utilizando .ljust() e r.just()
+def diario_turma(alunos):
+    print("-" * 56)
+    print(" " * 19 + "Diário da turma")
+    print("-" * 56)
+    print("RA".ljust(6) + "Nome".ljust(27) + "Nota B1".rjust(8) + "Nota B2".rjust(8) + "Média".rjust(8))
+    print("-" * 56)
+
+    soma_b1 = 0
+    soma_b2 = 0
+    soma_media = 0
+
+    for ra, dados in alunos.items():
+        media = (dados['nota_b1'] + dados['nota_b2']) / 2
+        soma_b1 += dados['nota_b1']
+        soma_b2 += dados['nota_b2']
+        soma_media += media
+        print(ra.ljust(6) + dados['nome'].ljust(27) + str(dados['nota_b1']).rjust(8) + str(dados['nota_b2']).rjust(8) + str(media).rjust(8))
+
+    media_b1 = soma_b1 / len(alunos) if alunos else 0
+    media_b2 = soma_b2 / len(alunos) if alunos else 0
+    media_geral = soma_media / len(alunos) if alunos else 0
+
+    print("-" * 56)
+    print(" " * 16 + "Médias da Turma" + str(media_b1).rjust(8) + str(media_b2).rjust(8) + str(media_geral).rjust(8))
+    print("-" * 56)
+
+# Função para retornar o menu no final de cada uma das execuções, até que o usuário solicite a quebra do ciclo de repetição. 
+if __name__ == "__main__":
+    menu()
